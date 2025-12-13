@@ -12,41 +12,6 @@ This repository builds an OCI container image that packages:
 
 The image is designed to be consumed by custom bootc-based container images.
 
-## What's Included
-
-### Homebrew Tarball
-- Pre-built Homebrew installation at `/usr/share/homebrew.tar.zst`
-- Built from official Homebrew installer in a clean Wolfi container
-- Compressed with zstd for efficient storage
-
-### Systemd Services
-
-#### brew-setup.service
-Runs on first boot to extract and configure Homebrew:
-- Extracts tarball to `/var/home/linuxbrew/.linuxbrew`
-- Sets appropriate ownership (UID 1000)
-- Creates marker file to prevent re-running
-
-#### brew-update.timer & brew-update.service
-Automatically keeps Homebrew up to date:
-- Runs daily to update Homebrew itself
-- Ensures formula database is current
-
-#### brew-upgrade.timer & brew-upgrade.service
-Automatically upgrades installed packages:
-- Runs on a regular schedule
-- Keeps installed packages up to date
-
-### Shell Integration
-- **Bash**: `/etc/profile.d/brew.sh` - Automatically configures Homebrew environment
-- **Fish**: `/usr/share/fish/vendor_conf.d/ublue-brew.fish` - Fish shell support
-- **Bash Completion**: `/etc/profile.d/brew-bash-completion.sh`
-
-### Configuration Files
-- **Security Limits**: `/etc/security/limits.d/30-brew-limits.conf`
-- **Tmpfiles**: `/usr/lib/tmpfiles.d/homebrew.conf`
-- **Systemd Presets**: `/usr/lib/systemd/system-preset/01-homebrew.preset`
-
 ## Using in Custom bootc Images
 
 ### Basic Example
@@ -87,3 +52,33 @@ RUN mkdir -p /var/home/linuxbrew && \
     tar --zstd -cvf /usr/share/homebrew.tar.zst /var/home/linuxbrew/.linuxbrew && \
     rm -rf /var/home/linuxbrew/.linuxbrew /tmp/home
 ```
+
+
+## Systemd Services
+
+### `brew-setup.service`
+Runs on first boot to extract and configure Homebrew:
+- Extracts tarball to `/var/home/linuxbrew/.linuxbrew`
+- Sets appropriate ownership (UID 1000)
+- Creates marker file to prevent re-running
+
+### `brew-update.timer` & `brew-update.service`
+Automatically keeps Homebrew up to date:
+- Runs daily to update Homebrew itself
+- Ensures formula database is current
+
+### `brew-upgrade.timer` & `brew-upgrade.service`
+Automatically upgrades installed packages:
+- Runs on a regular schedule
+- Keeps installed packages up to date
+
+### Shell Integration
+- **Bash**: `/etc/profile.d/brew.sh` - Automatically configures Homebrew environment
+- **Fish**: `/usr/share/fish/vendor_conf.d/ublue-brew.fish` - Fish shell support
+- **Bash Completion**: `/etc/profile.d/brew-bash-completion.sh`
+
+### Configuration Files
+- **Security Limits**: `/etc/security/limits.d/30-brew-limits.conf`
+- **Tmpfiles**: `/usr/lib/tmpfiles.d/homebrew.conf`
+- **Systemd Presets**: `/usr/lib/systemd/system-preset/01-homebrew.preset`
+
