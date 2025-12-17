@@ -21,7 +21,7 @@ To include Homebrew in your custom bootc image, copy the files from this reposit
 
 ```dockerfile
 # Copy Homebrew files from the brew image
-COPY --from=ghcr.io/projectbluefin/brew:latest /system_files /
+COPY --from=ghcr.io/ublue-os/brew:latest /system_files /
 ```
 
 This will:
@@ -41,7 +41,7 @@ If you want to pre-install Homebrew packages in your image:
 
 ```dockerfile
 # Copy Homebrew files
-COPY --from=ghcr.io/projectbluefin/brew:latest /system_files /
+COPY --from=ghcr.io/ublue-os/brew:latest /system_files /
 
 # Install Homebrew packages during image build
 RUN mkdir -p /var/home/linuxbrew && \
