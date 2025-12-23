@@ -12,6 +12,9 @@ This repository builds an OCI container image that packages:
 - Security limits and tmpfiles configuration
 
 The image is designed to be consumed by custom bootc-based container images.
+## Dependencies
+
+[See upstream Docs](https://docs.brew.sh/Homebrew-on-Linux)
 
 ## Using in Custom bootc Images
 
