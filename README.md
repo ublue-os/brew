@@ -24,14 +24,23 @@ To include Homebrew in your custom bootc image, copy the files from this reposit
 
 ```dockerfile
 # Copy Homebrew files from the brew image
+# And enable
 COPY --from=ghcr.io/ublue-os/brew:latest /system_files /
+RUN --mount=type=cache,dst=/var/cache \
+    --mount=type=cache,dst=/var/log \
+    --mount=type=tmpfs,dst=/tmp \
+    /usr/bin/systemctl preset brew-setup.service && \
+    /usr/bin/systemctl preset brew-update.timer && \
+    /usr/bin/systemctl preset brew-upgrade.timer
+
 ```
 
 This will:
 1. Install the Homebrew tarball to `/usr/share/homebrew.tar.zst`
 2. Install all systemd services and timers
-3. Add shell integration scripts
-4. Configure system limits and tmpfiles
+3. Enable all systemd services and timers
+4. Add shell integration scripts
+5. Configure system limits and tmpfiles
 
 On first boot, `brew-setup.service` will automatically:
 1. Extract Homebrew to `/var/home/linuxbrew/.linuxbrew`
