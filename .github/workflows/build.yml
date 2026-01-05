@@ -119,14 +119,14 @@ jobs:
       packages: write
       id-token: write
     steps:
+      - name: Install dependencies
+        run: apk add bash coreutils curl docker findutils fuse-overlayfs git grep jq podman sed
+
       - name: Prepare environment
         run: |
           # Lowercase the image uri
           echo "IMAGE_REGISTRY=${IMAGE_REGISTRY,,}" >> ${GITHUB_ENV}
           echo "IMAGE_NAME=${IMAGE_NAME,,}" >> ${GITHUB_ENV}
-
-      - name: Install dependencies
-        run: apk add bash coreutils curl docker findutils fuse-overlayfs git grep jq podman sed
 
       # Necessary until bootc supports Cosign v3
       - name: Install old cosign
