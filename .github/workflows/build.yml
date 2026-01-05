@@ -145,6 +145,8 @@ jobs:
         id: date
         run: echo "date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" | tee "${GITHUB_OUTPUT}"
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Read Brew Version
         id: brew_version
         run: echo "version=$(cat BREW_VERSION)" >> $GITHUB_OUTPUT
