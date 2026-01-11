@@ -6,12 +6,12 @@
 
   "regexManagers": [
     {
-      "fileMatch": ["^Containerfile$"],
+      "fileMatch": ["^BREW_VERSION$"],
       "matchStrings": [
-        "https://github\\.com/ublue-os/artwork/releases/download/bluefin-v(?<version>[0-9\\-]+)/bluefin-wallpapers\\.tar\\.zstd"
+        "^(?<currentValue>.*)"
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "ublue-os/artwork"
+      "depNameTemplate": "Homebrew/brew"
     }
   ]
 }
