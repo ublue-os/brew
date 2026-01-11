@@ -1,0 +1,22 @@
+--- install.sh	2026-01-05 10:33:20.161998302 +0700
++++ install-depth1.sh	2026-01-05 10:35:03.979773198 +0700
+@@ -972,8 +972,8 @@
+   else
+     quiet_progress=("--quiet")
+   fi
+-  retry 5 "${USABLE_GIT}" "fetch" "${quiet_progress[@]}" "--force" "origin"
+-  retry 5 "${USABLE_GIT}" "fetch" "${quiet_progress[@]}" "--force" "--tags" "origin"
++  retry 5 "${USABLE_GIT}" "fetch" "${quiet_progress[@]}" "--force" "origin" "--depth=1"
++  retry 5 "${USABLE_GIT}" "fetch" "${quiet_progress[@]}" "--force" "--tags" "origin" "--depth=1"
+ 
+   execute "${USABLE_GIT}" "remote" "set-head" "origin" "--auto" >/dev/null
+ 
+@@ -1010,7 +1010,7 @@
+       execute "${USABLE_GIT}" "config" "--bool" "core.autocrlf" "false"
+       execute "${USABLE_GIT}" "config" "--bool" "core.symlinks" "true"
+       retry 5 "${USABLE_GIT}" "fetch" "--force" "${quiet_progress[@]}" \
+-        "origin" "refs/heads/main:refs/remotes/origin/main"
++        "origin" "refs/heads/main:refs/remotes/origin/main" "--depth=1"
+       execute "${USABLE_GIT}" "remote" "set-head" "origin" "--auto" >/dev/null
+       execute "${USABLE_GIT}" "reset" "--hard" "origin/main"
+ 
