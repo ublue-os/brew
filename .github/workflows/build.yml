@@ -145,6 +145,12 @@ jobs:
         id: date
         run: echo "date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" | tee "${GITHUB_OUTPUT}"
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Read Brew Version
+        id: brew_version
+        run: echo "version=$(cat BREW_VERSION)" >> $GITHUB_OUTPUT
+
       - name: Image Metadata
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5
         id: metadata
@@ -153,6 +159,7 @@ jobs:
             type=raw,value=${{ env.DEFAULT_TAG }}
             type=raw,value=${{ env.DEFAULT_TAG }}.{{date 'YYYYMMDD'}}
             type=raw,value={{date 'YYYYMMDD'}}
+            type=raw,value=${{ steps.brew_version.outputs.version }}
             type=ref,event=pr
             type=sha,enable=${{ github.event_name == 'pull_request' }}
           labels: |
