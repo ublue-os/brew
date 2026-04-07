@@ -3,6 +3,7 @@
   "extends": [
     "github>ublue-os/renovate-config:org-inherited-config"
   ],
+  "forkProcessing": "enabled",
 
   "customManagers": [
     {
