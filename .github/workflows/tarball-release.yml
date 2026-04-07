@@ -1,0 +1,90 @@
+name: Generate Homebrew Tarball and Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - BREW_VERSION
+
+jobs:
+  build_tarball:
+    name: Build tarball
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        platform: [amd64, arm64]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Build container and extract tarball
+        run: |
+          set -euo pipefail
+          podman build -t brew-build --target builder -f Containerfile .
+          CID=$(podman create brew-build true)
+          mkdir -p out
+          podman cp "${CID}:/out/homebrew.tar.zst" "out/homebrew-$(uname -m).tar.zst"
+          podman rm "${CID}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        with:
+          name: homebrew-${{ matrix.platform }}
+          path: out/*
+
+  release:
+    name: Create release
+    needs: build_tarball
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Read brew version
+        id: version
+        run: echo "version=$(cat BREW_VERSION)" >> "$GITHUB_OUTPUT"
+
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          sha256sum *.tar.zst > SHA256SUMS
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          TITLE="Homebrew ${VERSION}"
+          NOTES="Homebrew ${VERSION} tarball for x86_64 and aarch64."
+
+          if gh release view "${VERSION}" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload "${VERSION}" \
+              --repo "${{ github.repository }}" \
+              --clobber \
+              artifacts/*
+            gh release edit "${VERSION}" \
+              --repo "${{ github.repository }}" \
+              --title "${TITLE}" \
+              --notes "${NOTES}" \
+              --latest
+          else
+            gh release create "${VERSION}" \
+              --repo "${{ github.repository }}" \
+              --title "${TITLE}" \
+              --notes "${NOTES}" \
+              --latest \
+              artifacts/*
+          fi
