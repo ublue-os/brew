@@ -75,3 +75,15 @@ Automatically upgrades installed packages:
 - **Tmpfiles**: `/usr/lib/tmpfiles.d/homebrew.conf`
 - **Systemd Presets**: `/usr/lib/systemd/system-preset/01-homebrew.preset`
 
+## How do I override system binaries with homebrew ones?
+
+As discussed [here](https://github.com/ublue-os/brew/pull/1), overriding system
+provided binaries can lead to some unexpected issues, but it might still be
+desirable to have a specific homebrew program that is also provided by the OS
+to take precedence over the system one.
+
+Make an alias!
+
+```sh
+alias git='/home/linuxbrew/.linuxbrew/bin/git'
+```
