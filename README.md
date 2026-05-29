@@ -75,7 +75,11 @@ Automatically upgrades installed packages:
 - **Tmpfiles**: `/usr/lib/tmpfiles.d/homebrew.conf`
 - **Systemd Presets**: `/usr/lib/systemd/system-preset/01-homebrew.preset`
 
-## How do I override system binaries with homebrew ones?
+## Known limitations
+
+- Launching desktops from the TTY causes linuxbrew to be present in non-interactive shells (krunner, rofi). See [this](https://github.com/ublue-os/brew/issues/24#issuecomment-4574594563).
+
+### How do I override system binaries with homebrew ones?
 
 As discussed [here](https://github.com/ublue-os/brew/pull/1), overriding system
 provided binaries can lead to some unexpected issues, but it might still be
