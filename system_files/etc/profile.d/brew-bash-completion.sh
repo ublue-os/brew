@@ -12,12 +12,19 @@ if [ "x${BASH_VERSION-}" != x -a "x${PS1-}" != x -a "x${BREW_BASH_COMPLETION-}" 
             fi
         fi
         if test -d /home/linuxbrew/.linuxbrew/etc/bash_completion.d; then
+            # Temporarily prepend brew's bin so completion scripts that invoke
+            # their own binary by name (e.g. `eval "$(JUST_COMPLETE=bash just)"`)
+            # find the brew-installed binary rather than a system one that may
+            # not support the same flags, avoiding spurious errors on terminal open.
+            _brew_saved_path="$PATH"
+            PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
             for rc in /home/linuxbrew/.linuxbrew/etc/bash_completion.d/*; do
                 if test -r "$rc"; then
                 . "$rc"
                 fi
             done
-            unset rc
+            PATH="$_brew_saved_path"
+            unset rc _brew_saved_path
         fi
     fi
     BREW_BASH_COMPLETION=1
