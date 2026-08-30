@@ -89,5 +89,5 @@ to take precedence over the system one.
 Make an alias!
 
 ```sh
-alias git='/home/linuxbrew/.linuxbrew/bin/git'
+[ -f /home/linuxbrew/.linuxbrew/bin/git ] && alias git='/home/linuxbrew/.linuxbrew/bin/git'
 ```
