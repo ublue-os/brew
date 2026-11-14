@@ -77,7 +77,8 @@ Automatically upgrades installed packages:
 
 ## Known limitations
 
-- Launching desktops from the TTY causes linuxbrew to be present in non-interactive shells (krunner, rofi). See [this](https://github.com/ublue-os/brew/issues/24#issuecomment-4574594563).
+- ~~Launching desktops from the TTY causes linuxbrew to be present in non-interactive shells (krunner, rofi). See [this](https://github.com/ublue-os/brew/issues/24#issuecomment-4574594563).~~
+- See https://github.com/ublue-os/brew/issues of course
 
 ### How do I override system binaries with homebrew ones?
 
